@@ -1,113 +1,133 @@
 import {
-	FaInfoCircle,
-	FaArrowAltCircleUp,
-	FaTrashAlt,
-	FaSave
+  FaInfoCircle,
+  FaArrowAltCircleUp,
+  FaTrashAlt,
+  FaSave,
 } from "react-icons/fa";
 
 export function Profit() {
-	return (
-		<div className="w-50 bg-zinc-200 h-60 rounded-3xl shadow-shape">
-			<div className="bg-zinc-600 w-[4.5rem] text-zinc-200 rounded-br-3xl rounded-tl-2xl px-2 py-1">
-				<span>2024/8</span>
-			</div>
+  return (
+    <div className="w-[50rem] bg-zinc-200 h-64 rounded-3xl shadow-shape">
+      <div className="bg-zinc-600 max-w-[4.5rem] text-zinc-200 rounded-br-3xl rounded-tl-2xl px-2 py-1">
+        <span>2024/8</span>
+      </div>
 
-			<div className="grid grid-cols-4 px-16">
-				<div className="flex flex-col">
-					<div>
-						<label htmlFor="custo">Custo</label>
-						<input
-							type="number"
-							id="custo"
-							placeholder="Escreva o custo de produção"
-							className="w-32 no-"
-						/>
-					</div>
+      <div className="flex flex-flex-wrap justify-center px-16">
+        <div className="flex gap-4">
+          <div className="flex flex-col gap-2">
+            <div>
+              <label htmlFor="custo">
+                <p>Custo</p>
+              </label>
+              <input
+                type="number"
+                id="custo"
+                placeholder="Custo de produção"
+                className="w-40 px-1 rounded no-spinner bg-zinc-100 focus:bg-white focus:outline-none"
+              />
+            </div>
+            <div>
+              <label htmlFor="gain">
+                <p>Ganho</p>
+              </label>
+              <input
+                type="number"
+                id="gain"
+                className="w-40 px-1 rounded no-spinner bg-zinc-100 focus:bg-white focus:outline-none"
+                placeholder="Ganho"
+              />
+            </div>
+            <div>
+              <h3>Lucro esperado</h3>
+              <p className="text-xs text-gray-lightin">1000 - 880</p>
+              <p className="text-green-900">R$ 120</p>
+            </div>
+          </div>
 
-					<div>
-						<label htmlFor="gain">Ganho</label>
-						<input type="number" id="gain" placeholder="Escreva o seu ganho" />
-					</div>
+          <div className="flex flex-col justify-center relative top-4 gap-2">
+            <div className="flex flex-col gap-2">
+              <div>
+                <select className="text-sm w-40 px-1 rounded bg-zinc-100 focus:bg-white h-6 ">
+                  <option>Diário</option>
+                  <option>Mensal</option>
+                </select>
+              </div>
 
-					<div>
-						<h3>Lucro esperado</h3>
-						<p className="text-xs">1000 - 880</p>
-						<p>R$ 120</p>
-					</div>
-				</div>
+              <div className="flex items-center px-1 rounded bg-zinc-100 focus:bg-white w-40 ">
+                <input
+                  type="number"
+                  className="no-spinner w-full bg-zinc-100 focus:bg-white focus:outline-none"
+                  placeholder="Dias úteis"
+                />
+                <FaInfoCircle size={12} className="cursor-pointer"/>
+              </div>
+            </div>
+            <div>
+              <label>Lucro real</label>
+              <div className="flex items-center px-1 rounded bg-zinc-100 focus:bg-white w-40">
+                <input
+                  type="number"
+                  className="no-spinner w-full bg-zinc-100 focus:bg-white focus:outline-none"
+                  placeholder="Lucro real"
+                />
+                <FaInfoCircle size={12} className="cursor-pointer"/>
+              </div>
+            </div>
+          </div>
+        </div>
 
-				<div>
-					<div>
-						<select className="text-sm">
-							<option>Diário</option>
-							<option>Mensal</option>
-						</select>
-					</div>
-					<div>
-						<input type="number" placeholder="Dias úteis" />
-						<FaInfoCircle size={14} />
-					</div>
+        <div className="relative left-6">
+          <div className="w-px h-36 bg-zinc-300" />
+        </div>
 
-					<div>
-						<label>Lucro real</label>
-						<div>
-							<input type="number" placeholder="Escreva seu lucro real" />
-							<FaInfoCircle />
-						</div>
-					</div>
-				</div>
+        <div className="flex gap-4 relative left-10">
+          <div>
+            <h3 className="mb-1">Margem de Lucro</h3>
+            <select className="text-sm w-40 px-1 py-1 mb-2 rounded bg-zinc-100 focus:bg-white">
+              <option>Comércio</option>
+              <option>Indústria</option>
+            </select>
+            <p className="text-xs text-gray-lightin">(120/100) * 100</p>
+            <p className="text-xs text-gray-lightin">0,12 * 100</p>
+            <div className="flex items-center gap-1">
+              <p className="text-red-600">12%</p>
+              <FaInfoCircle size={12} className="cursor-pointer"/>
+            </div>
+          </div>
+          <div>
+            <div>
+              <h3 className="mb-1">Esperado x Real</h3>
+              <p className="text-xs text-gray-lightin">(140 * 100) / 120</p>
+              <p className="text-xs text-gray-lightin">14000 / 120</p>
+              <div className="flex items-center gap-1">
+                <p className="text-sm text-green-900">116,68%</p>
+                <FaArrowAltCircleUp size={12}/>
+              </div>
+              <p className="text-xs text-gray-lightin">116,68 / 100</p>
+              <div className="flex items-center gap-1">
+                <p className="text-sm text-green-900">1,1668%</p>
+                <FaArrowAltCircleUp size={12}/>
+              </div>
+              <p className="text-xs text-gray-lightin">140 - 120</p>
+              <div className="flex items-center gap-1 ">
+                <p className="text-sm text-green-900">R$ 40</p>
+                <FaArrowAltCircleUp size={12}/>
+              </div>
+            </div>
+          </div>
 
-				{/* <div className="w-px h-36 bg-zinc-300" /> */}
-
-				<div>
-					<div>
-						<h3>Margem de Lucro</h3>
-						<select className="text-sm">
-							<option>Comércio</option>
-							<option>Indústria</option>
-						</select>
-					</div>
-					<div>
-						<p className="text-xs">(120/100) * 100</p>
-						<p className="text-xs">0,12 * 100</p>
-						<div className="flex">
-							<p className="text-xs">12%</p>
-							<FaInfoCircle/>
-						</div>
-					</div>
-
-					<div className="flex justify-center items-center h-10 w-36 bg-red-600 text-red-950 rounded-lg cursor-pointer">
-						<button>Excluir</button>
-						<FaTrashAlt size={14} />
-					</div>
-				</div>
-
-				<div>
-					<div>
-						<h3>Esperado x Real</h3>
-						<p className="text-xs">(140 * 100) / 120</p>
-						<p className="text-xs">14000 / 120</p>
-						<div className="flex">
-							<p className="text-sm">116,68%</p>
-							<FaArrowAltCircleUp />
-						</div>
-						<p className="text-xs">116,68 / 100</p>
-						<div className="flex">
-							<p className="text-sm">1,1668%</p>
-							<FaArrowAltCircleUp />
-						</div> 
-						<p className="text-xs">140 - 120</p>
-						<div className="flex">
-							<p className="text-sm">R$ 40</p>
-							<FaArrowAltCircleUp />
-						</div>
-						<div className="flex justify-center items-center h-10 w-36 bg-lime-400 text-lime-950 rounded-lg cursor-pointer">
-							<button>Salvar</button>
-							<FaSave size={16} />
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	);
+        </div>
+      </div>
+	  <div className="flex gap-4 justify-end relative right-8 bottom-2">
+            <div className="flex justify-center items-center h-10 w-36 bg-red-600 text-red-950 rounded-lg cursor-pointer gap-1">
+              <button>Excluir</button>
+              <FaTrashAlt size={14} />
+            </div>
+            <div className="flex justify-center items-center h-10 w-36 bg-lime-400 text-lime-950 rounded-lg cursor-pointer gap-1">
+              <button>Salvar</button>
+              <FaSave size={16} />
+            </div>
+          </div>
+    </div>
+  );
 }

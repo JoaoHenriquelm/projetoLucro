@@ -3,7 +3,7 @@ import { FaPlus } from "react-icons/fa";
 export function FilterAndCreate() {
 	return (
 		<div className="flex justify-center">
-			<div className="w-50 flex justify-between my-6 items-center">
+			<div className="w-[50rem] flex justify-between my-6 items-center">
 				<select className="w-32 h-6 px-3 rounded">
 					<option>Todos</option>
 					<option>2024</option>
