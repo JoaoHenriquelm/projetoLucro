@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	FaInfoCircle,
 	FaArrowAltCircleUp,
@@ -11,45 +11,43 @@ import {
 export function Profit() {
 	const [cust, setCust] = useState("");
 	const [gain, setGain] = useState("");
+	const [totalGain, setTotalGain] = useState(0);
+	const [profit, setProfit] = useState(0);
 	const [realProfit, setRealProfit] = useState("");
 	const [realGain, setRealGain] = useState("");
 	const [typeDiary, setTypeDiary] = useState(false);
 	const [workedDays, setWorkedDays] = useState("");
 	const [typeMarket, setTypeMarket] = useState("Comércio");
+	const [expectedMargin, setExpectedMargin] = useState(0);
+	const [realMargin, setRealMargin] = useState(0);
 
 	const [infoWorkedDays, setInfoWorkedDays] = useState(false);
 	const [infoRealProfit, setInfoRealProfit] = useState(false);
 	const [infoGainProfit, setInfoGainProfit] = useState(false);
 	const [infoMarginProfit, setInfoMarginProfit] = useState(false);
 
-	function profitCalculate(cust, gain, typeDiary, workedDays) {
-		let profit;
-		if (!typeDiary) {
-			profit = Number(gain) - Number(cust);
-			return `${profit}`;
+	useEffect(() => {
+		if (typeDiary) {
+			setTotalGain(Number(workedDays) * Number(gain));
 		} else {
-			profit = Number(workedDays) * Number(gain) - Number(cust);
-			return `${profit}`;
+			setTotalGain(Number(gain));
 		}
-	}
+	}, [typeDiary, workedDays, gain]);
 
-	function marginProfit(cust, typeReal) {
-		const profit = profitCalculate(cust, gain, typeDiary, workedDays);
-		if (!typeDiary) {
-			return (Number(realProfit) && Number(realGain)) && typeReal
-				? `${((Number(realProfit) / Number(realGain)) * 100).toFixed(2)}`
-				: `${((Number(profit) / Number(gain)) * 100).toFixed(2)}`;
-		} else {
-			return (Number(realProfit) && Number(realGain)) && typeReal
-				? `${((Number(realProfit) / Number(gain * workedDays)) * 100).toFixed(
-						2
-				  )}`
-				: `${((Number(profit) / Number(gain * workedDays)) * 100).toFixed(2)}`;
-		}
-	}
+	useEffect(() => {
+		setProfit(totalGain - Number(cust));
+	}, [cust, totalGain]);
 
-	function colorMarginProfit(marginProfit) {
-		const margin = Number(marginProfit);
+	useEffect(() => {
+		setExpectedMargin(((profit / totalGain) * 100).toFixed(2));
+	}, [profit, totalGain]);
+
+	useEffect(() => {
+		setRealMargin(((Number(realProfit) / Number(realGain)) * 100).toFixed(2));
+	}, [realProfit, realGain]);
+
+	function colorMarginProfit() {
+		const margin = realProfit && realGain ? realMargin : expectedMargin;
 		const cursor = "cursor-pointer";
 		if (typeMarket === "Comércio") {
 			if (margin < 15) {
@@ -72,8 +70,8 @@ export function Profit() {
 		}
 	}
 
-	function infoMarginMessage(marginProfit) {
-		const margin = Number(marginProfit);
+	function infoMarginMessage() {
+		const margin = realProfit && realGain ? realMargin : expectedMargin;
 		const badMessage = `Sua margem de lucro é de ${margin}%, tente diminuir seu custo ou aumentar seu ganho nesse investimento para ter uma margem ideal para o ${typeMarket.toLowerCase()} que é de:`;
 		const goodMessage = `Sua margem de lucro é de ${margin}%, é uma margem ideal para o ${typeMarket.toLowerCase()}`;
 		if (typeMarket === "Comércio") {
@@ -122,7 +120,7 @@ export function Profit() {
 		}
 	}
 
-	function percentageProps(value, option) {
+	function percentageProps(value, auxValue, option) {
 		if (value > 100) {
 			switch (option) {
 				case "color":
@@ -137,6 +135,13 @@ export function Profit() {
 				case "symbol":
 					return <FaMinusCircle size={12} />;
 			}
+		} else if (auxValue < 0) {
+			switch (option) {
+				case "color":
+					return `text-green-900`;
+				case "symbol":
+					return <FaArrowAltCircleUp size={12} />;
+			}
 		} else {
 			switch (option) {
 				case "color":
@@ -146,6 +151,10 @@ export function Profit() {
 			}
 		}
 	}
+
+	let marginDiffer = Number(realMargin - expectedMargin).toFixed(2);
+	let percentageCalculate = (Number(realProfit) * 100) / profit;
+	let profitDiffer = Number(realProfit - profit);
 
 	return (
 		<div className="w-[50rem] bg-zinc-200 h-[17rem] rounded-3xl shadow-shape last:mb-16">
@@ -171,12 +180,12 @@ export function Profit() {
 						</div>
 						<div>
 							<label htmlFor="gain">
-								<p>Receita</p>
+								<p>Receita esperada</p>
 							</label>
 							<input
 								type="number"
 								id="gain"
-								className="w-40 px-1 rounded no-spinner bg-zinc-100 focus:bg-white focus:outline-none"
+								className={`w-40 px-1 rounded no-spinner bg-zinc-100 focus:bg-white focus:outline-none ${Number(gain) <= 0 ? ("outline outline-red-600") : ("")}`}
 								placeholder="Receita esperada"
 								value={gain}
 								onChange={(e) => setGain(e.target.value)}
@@ -246,12 +255,13 @@ export function Profit() {
 										lucro real, as informações de previsão serão utilizadas.{" "}
 									</p>
 								</div>
-								<label>Receita real</label>
+								<label htmlFor="realGain">Receita real</label>
 								<div className="flex items-center rounded w-40">
 									<input
 										type="number"
-										className="no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none"
+										className={`no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none ${Number(realGain) <= 0? ("outline outline-red-600"):("")}`} 
 										placeholder="Receita real"
+										id="realGain"
 										value={realGain}
 										onChange={(e) => setRealGain(e.target.value)}
 									/>
@@ -282,7 +292,7 @@ export function Profit() {
 								<div className="flex items-center rounded w-40">
 									<input
 										type="number"
-										className="no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none"
+										className={`no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none ${Number(realProfit) <= 0? ("outline outline-red-600"):("")}`}
 										placeholder="Lucro real"
 										value={realProfit}
 										onChange={(e) => setRealProfit(e.target.value)}
@@ -299,12 +309,13 @@ export function Profit() {
 								<h3>Lucro esperado</h3>
 								<p className="text-xs text-gray-lightin">
 									{typeDiary
-										? `${workedDays} * ${gain} - ${cust} `
-										: `${gain} - ${cust}`}
+										? `${Number(workedDays).toFixed(2)} * ${Number(gain).toFixed(2)} - ${Number(cust).toFixed(2)} `
+										: `${Number(gain).toFixed(2)} - ${Number(cust).toFixed(2)}`}
 								</p>
-								<p className="text-green-900">
-									R$ {profitCalculate(cust, gain, typeDiary, workedDays)}
-								</p>
+								<p className={`text-sm ${marginAndDifferProfitProps(
+												profit,
+												"color"
+											)}`}>R$ {(profit).toFixed(2)}</p>
 							</div>
 						</div>
 					</div>
@@ -318,8 +329,10 @@ export function Profit() {
 					<div>
 						<h3 className="mb-1">Margem de Lucro</h3>
 						{((realGain && realProfit) || (gain && cust)) &&
-						gain !== "0" &&
-						realGain !== "0" ? (
+						Number(gain) > 0 &&
+						Number(realGain) > 0 &&
+						profit !== 0 &&
+						Number(realProfit) > 0 ? (
 							<div>
 								{" "}
 								<select
@@ -342,28 +355,20 @@ export function Profit() {
 								<p className="text-xs text-gray-lightin">
 									{realProfit && realGain
 										? `(${realProfit} / ${realGain}) * 100`
-										: `(${profitCalculate(
-												cust,
-												gain,
-												typeDiary,
-												workedDays
-										  )} / ${Number(gain) * (Number(workedDays) || 1)}) * 100`}
+										: `(${profit} / ${totalGain}) * 100`}
 								</p>
 								<p className="text-xs text-gray-lightin">
 									{realProfit && realGain
 										? `${(realProfit / realGain).toFixed(4)} * 100`
-										: `${(
-												profitCalculate(cust, gain, typeDiary, workedDays) /
-												(gain * (Number(workedDays) || 1))
-										  ).toFixed(4)} * 100`}
+										: `${(profit / totalGain).toFixed(4)} * 100`}
 								</p>
 								<div className="flex items-center justify-between gap-1">
 									<p
-										className={colorMarginProfit(marginProfit(cust, true))}
+										className={colorMarginProfit()}
 										onMouseEnter={() => setInfoMarginProfit(true)}
 										onMouseLeave={() => setInfoMarginProfit(false)}
 									>
-										{marginProfit(cust, true)}%
+										{realProfit && realGain ? realMargin : expectedMargin}%
 									</p>
 									<div
 										className={
@@ -372,7 +377,7 @@ export function Profit() {
 												: `hidden`
 										}
 									>
-										<p>{infoMarginMessage(marginProfit(cust, true))}</p>
+										<p>{infoMarginMessage()}</p>
 									</div>
 								</div>{" "}
 							</div>
@@ -392,121 +397,60 @@ export function Profit() {
 							realGain &&
 							gain &&
 							cust &&
-							gain !== "0" &&
-							realGain !== "0" &&
-							(marginProfit(cust, true)) !== "0.00" && (marginProfit(cust, false)) !== "0.00" ? (
+							Number(gain) > 0 &&
+							Number(realGain) > 0 &&
+							Number(realProfit) > 0 &&
+							profit !== 0 ? (
 								<div>
 									{" "}
 									<p className="text-xs text-zinc-800">Margem de lucro:</p>
 									<p className="text-xs text-gray-lightin flex items-center gap-1">
-										{marginProfit(cust, true)} -{" "}
-										{typeDiary
-											? (
-													(profitCalculate(cust, gain, typeDiary, workedDays) /
-														Number(gain * workedDays)) *
-													100
-											  ).toFixed(2)
-											: (
-													(Number(
-														profitCalculate(cust, gain, typeDiary, workedDays)
-													) /
-														Number(gain)) *
-													100
-											  ).toFixed(2)}
+										{realMargin} - {expectedMargin}
 									</p>
 									<div className="flex items-center gap-1">
 										<p
 											className={`text-sm ${marginAndDifferProfitProps(
-												Number(
-													marginProfit(cust, true) - marginProfit(cust, false)
-												),
+												Number(marginDiffer),
 												"color"
 											)}`}
 										>
-											{Number(
-												marginProfit(cust, true) - marginProfit(cust, false)
-											).toFixed(2)}
-											%
+											{marginDiffer}%
 										</p>
-										{marginAndDifferProfitProps(
-											Number(
-												marginProfit(cust, true) - marginProfit(cust, false)
-											),
-											"symbol"
-										)}
+										{marginAndDifferProfitProps(Number(marginDiffer), "symbol")}
 									</div>
 									<p className="text-xs text-zinc-800">
 										Porcentagem ao esperado:
 									</p>
 									<p className="text-xs text-gray-lightin">
-										(
-										{`${realProfit} * 100 / ${
-											typeDiary
-												? Number(workedDays * gain) - Number(cust)
-												: Number(gain - cust)
-										}`}
-										)
+										({`${realProfit} * 100 / ${profit}`})
 									</p>
 									<div className="flex items-center gap-1">
 										<p
 											className={`text-sm ${percentageProps(
-												(Number(realProfit) * 100) /
-													(typeDiary
-														? Number(workedDays * gain) - Number(cust)
-														: Number(gain - cust)),
+												percentageCalculate, profit,
 												"color"
 											)}`}
 										>
-											{(
-												(Number(realProfit) * 100) /
-												(typeDiary
-													? Number(workedDays * gain) - Number(cust)
-													: Number(gain - cust))
-											).toFixed(2)}
-											%{" "}
+											{percentageCalculate.toFixed(2)}%{" "}
 										</p>
-										{percentageProps(
-											(realProfit * 100) /
-												(typeDiary
-													? Number(workedDays * gain) - Number(cust)
-													: Number(gain - cust)),
-											"symbol"
-										)}
+										{percentageProps(percentageCalculate, profit, "symbol")}
 									</div>
 									<p className="text-xs text-zinc-800">
 										Diferença entre os lucros:
 									</p>
 									<p className="text-xs text-gray-lightin">
-										{`${realProfit}`} -{" "}
-										{typeDiary
-											? Number(workedDays * gain) - Number(cust)
-											: Number(gain - cust)}
+										{`${realProfit}`} - {profit}
 									</p>
 									<div className="flex items-center gap-1 ">
 										<p
 											className={`text-sm ${marginAndDifferProfitProps(
-												realProfit -
-													(typeDiary
-														? Number(workedDays * gain) - Number(cust)
-														: Number(gain - cust)),
+												profitDiffer,
 												"color"
 											)}`}
 										>
-											R${" "}
-											{(
-												realProfit -
-												(typeDiary
-													? Number(workedDays * gain) - Number(cust)
-													: Number(gain - cust))
-											).toFixed(2)}
+											R$ {profitDiffer.toFixed(2)}
 										</p>
-										{marginAndDifferProfitProps(
-											realProfit -
-												(typeDiary
-													? Number(workedDays * gain) - Number(cust)
-													: Number(gain - cust)),
-											"symbol"
-										)}
+										{marginAndDifferProfitProps(profitDiffer, "symbol")}
 									</div>{" "}
 								</div>
 							) : (
