@@ -185,7 +185,7 @@ export function Profit() {
 							<input
 								type="number"
 								id="gain"
-								className={`w-40 px-1 rounded no-spinner bg-zinc-100 focus:bg-white focus:outline-none ${Number(gain) <= 0 ? ("outline outline-red-600") : ("")}`}
+								className={`w-40 px-1 rounded no-spinner bg-zinc-100 focus:bg-white focus:outline-none ${(Number(gain) < 0) || (gain === "0") ? ("outline outline-red-600") : ("")}`}
 								placeholder="Receita esperada"
 								value={gain}
 								onChange={(e) => setGain(e.target.value)}
@@ -259,7 +259,7 @@ export function Profit() {
 								<div className="flex items-center rounded w-40">
 									<input
 										type="number"
-										className={`no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none ${Number(realGain) <= 0? ("outline outline-red-600"):("")}`} 
+										className={`no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none ${(Number(realGain) < 0) || (realGain === "0")? ("outline outline-red-600"):("")}`} 
 										placeholder="Receita real"
 										id="realGain"
 										value={realGain}
@@ -292,7 +292,7 @@ export function Profit() {
 								<div className="flex items-center rounded w-40">
 									<input
 										type="number"
-										className={`no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none ${Number(realProfit) <= 0? ("outline outline-red-600"):("")}`}
+										className={`no-spinner w-full px-1 rounded bg-zinc-100 focus:bg-white focus:outline-none ${(Number(realProfit) < 0) || (realProfit === "0")? ("outline outline-red-600"):("")}`}
 										placeholder="Lucro real"
 										value={realProfit}
 										onChange={(e) => setRealProfit(e.target.value)}
