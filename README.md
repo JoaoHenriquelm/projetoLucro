@@ -6,7 +6,6 @@ Esta aplicação representa o lado do cliente do projeto lucro, proporcionando u
 
 **Front-end:** React, TailwindCSS.
 
-
 ## Screenshots
 
 ![Análise de lucro](https://github.com/user-attachments/assets/6c030452-5636-4059-a880-10dafc22d1dc)
@@ -18,12 +17,6 @@ Clone o projeto
 
 ```bash
   git clone https://github.com/JoaoHenriquelm/projetoLucro
-```
-
-Entre no diretório do projeto
-
-```bash
-  cd projetoLucro
 ```
 
 Instale as dependências
